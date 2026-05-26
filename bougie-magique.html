@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Bougie Magique — Accompagnement Instagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --majorelle: #2553a1;
+    --brise: #c9dfee;
+    --ecume: #f5fbfd;
+    --miel: #fecb4b;
+    --sable: #ffe2a8;
+    --creme: #f8f3ee;
+    --deep: #1a2d50;
+    --muted: #5a7299;
+    --border: rgba(37,83,161,0.12);
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--creme);
+    color: var(--deep);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(to right, var(--miel), var(--majorelle), var(--miel));
+    background-size: 200% auto;
+    z-index: 9999;
+    transition: width 0.1s ease;
+    animation: shimmer-bar 2s linear infinite;
+  }
+  @keyframes shimmer-bar {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* ── CURSEUR ── */
+  * { cursor: none !important; }
+  #cursor {
+    position: fixed;
+    width: 28px; height: 28px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ── PAILLETTES ── */
+  #paillettes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .spark {
+    position: absolute;
+    border-radius: 50%;
+    animation: sparkle linear infinite;
+    opacity: 0;
+  }
+  @keyframes sparkle {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0); }
+    10%  { opacity: 1; }
+    80%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-120vh) rotate(720deg) scale(1.5); }
+  }
+  .deco-star {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    animation: twinkle 3s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0%   { opacity: 0.15; transform: scale(0.8) rotate(0deg); }
+    100% { opacity: 0.6;  transform: scale(1.2) rotate(20deg); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 5rem 0 4rem;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 500px;
+    background: radial-gradient(ellipse, rgba(254,203,75,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--majorelle);
+    background: var(--sable);
+    padding: 6px 20px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    border: 1.5px solid rgba(254,203,75,0.5);
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 8vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--majorelle);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--miel);
+    -webkit-text-stroke: 1px var(--majorelle);
+  }
+  .hero-hook {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.3s;
+  }
+  .hero-promise {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--deep);
+    max-width: 440px;
+    margin: 0 auto 1rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+  .hero-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 460px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.5s;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3.5rem 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--brise);
+  }
+  .divider span { font-size: 1rem; color: var(--miel); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--majorelle);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  /* ── PROBLÈMES ── */
+  .prob-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+  .prob-item {
+    background: var(--white);
+    border: 1.5px solid var(--brise);
+    border-radius: 20px;
+    padding: 1.35rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .prob-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(37,83,161,0.1);
+  }
+  .prob-item strong {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--majorelle);
+  }
+  .prob-item p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+  /* ── PIVOT ── */
+  .pivot {
+    background: var(--sable);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    text-align: center;
+    border: 1.5px solid rgba(254,203,75,0.4);
+  }
+  .pivot p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--deep);
+  }
+  .pivot strong { color: var(--majorelle); font-weight: 600; }
+
+  /* ── VISION ── */
+  .vision {
+    background: var(--ecume);
+    border: 1.5px solid var(--brise);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .vision::before {
+    content: 'P&P';
+    position: absolute;
+    top: -10px; right: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 600;
+    color: var(--miel);
+    opacity: 0.08;
+    line-height: 1;
+  }
+  .vision-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--majorelle);
+  }
+  .vision p { font-size: 0.92rem; color: var(--muted); line-height: 1.8; }
+  .vision strong { color: var(--deep); font-weight: 600; }
+
+  /* ── OBJECTIF ── */
+  .objectif {
+    border-left: 3px solid var(--majorelle);
+    border-radius: 0 20px 20px 0;
+    background: var(--brise);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .objectif-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--majorelle);
+    margin-bottom: 6px;
+  }
+  .objectif p { font-size: 0.88rem; color: var(--deep); line-height: 1.7; margin: 0; opacity: 0.85; }
+
+  /* ── APPELS ── */
+  .appel {
+    background: var(--white);
+    border: 1.5px solid var(--brise);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 14px;
+    position: relative;
+    transition: box-shadow 0.2s ease;
+  }
+  .appel:hover { box-shadow: 0 8px 28px rgba(37,83,161,0.1); }
+  .appel-num {
+    position: absolute;
+    top: 1.2rem; right: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--majorelle);
+    opacity: 0.07;
+    line-height: 1;
+  }
+  .appel-week {
+    font-size: 0.72rem;
+    color: var(--majorelle);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--brise);
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 100px;
+    margin-bottom: 0.75rem;
+  }
+  .appel-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 6px;
+  }
+  .appel-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 0.72rem;
+    background: var(--sable);
+    color: var(--deep);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  /* ── BONUS ── */
+  .bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .bonus-item {
+    background: var(--white);
+    border: 1.5px solid var(--brise);
+    border-radius: 20px;
+    padding: 1.25rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  .bonus-item:hover { transform: translateY(-3px); }
+  .bonus-icon { font-size: 1.5rem; margin-bottom: 0.6rem; display: block; }
+  .bonus-title { font-size: 0.82rem; font-weight: 600; color: var(--majorelle); margin-bottom: 4px; }
+  .bonus-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── RÉSULTATS ── */
+  .result-list { display: flex; flex-direction: column; gap: 10px; }
+  .result-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 1rem 1.25rem;
+    background: var(--white);
+    border: 1.5px solid var(--brise);
+    border-radius: 20px;
+    transition: transform 0.2s ease;
+  }
+  .result-row:hover { transform: translateX(4px); }
+  .result-check {
+    width: 22px; height: 22px;
+    background: var(--miel);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 0; position: relative;
+  }
+  .result-check::after {
+    content: '';
+    display: block;
+    width: 6px; height: 10px;
+    border: 2px solid var(--deep);
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .result-row p { font-size: 0.88rem; color: var(--deep); margin: 0; line-height: 1.6; }
+
+  /* ── TÉMOIGNAGES ── */
+  .temoignages-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .temoignage {
+    background: var(--white);
+    border: 1.5px solid var(--brise);
+    border-radius: 20px;
+    padding: 1.35rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .temoignage:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,83,161,0.08);
+  }
+  .temoignage-stars { display: flex; gap: 2px; margin-bottom: 0.75rem; }
+  .temoignage-stars span { color: var(--miel); font-size: 0.8rem; }
+  .temoignage-text {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+    font-style: italic;
+  }
+  .temoignage-author {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--majorelle);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .temoignage-author::before {
+    content: '';
+    display: block;
+    width: 20px; height: 2px;
+    background: var(--miel);
+    border-radius: 2px;
+  }
+  .temoignage-full { grid-column: 1 / -1; }
+
+  /* ── ZONE PREUVE ── */
+  .preuve-zone {
+    border: 1.5px dashed rgba(37,83,161,0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--ecume);
+    margin-bottom: 0;
+  }
+  .preuve-zone p { font-size: 0.82rem; color: var(--majorelle); line-height: 1.6; margin: 0; }
+
+  /* ── PRIX ── */
+  .prix-block {
+    background: var(--majorelle);
+    border-radius: 28px;
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .prix-block::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(254,203,75,0.3) 0%, transparent 70%);
+  }
+  .prix-block::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(201,223,238,0.2) 0%, transparent 70%);
+  }
+  .prix-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,251,253,0.6);
+    margin-bottom: 0.75rem;
+    position: relative; z-index: 1;
+    font-weight: 600;
+  }
+  .prix-montant {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    font-weight: 600;
+    color: var(--miel);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    position: relative; z-index: 1;
+  }
+  .prix-detail {
+    font-size: 0.82rem;
+    color: rgba(245,251,253,0.65);
+    margin-bottom: 0.4rem;
+    position: relative; z-index: 1;
+  }
+  .prix-facilite {
+    font-size: 0.8rem;
+    color: var(--sable);
+    font-weight: 600;
+    position: relative; z-index: 1;
+  }
+
+  /* ── CTA ── */
+  .cta-btn {
+    display: block;
+    width: 100%;
+    background: var(--miel);
+    color: var(--deep);
+    border: none;
+    border-radius: 100px;
+    padding: 18px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    margin-bottom: 1.25rem;
+    text-decoration: none;
+    text-align: center;
+  }
+  .cta-btn:hover {
+    background: #f0bc30;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(254,203,75,0.45);
+  }
+
+  /* ── GARANTIE ── */
+  .garantie {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 1rem 1.25rem;
+    background: var(--brise);
+    border-radius: 16px;
+  }
+  .garantie span { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .garantie p { font-size: 0.82rem; color: var(--majorelle); line-height: 1.5; margin: 0; }
+
+  /* ── FAQ ── */
+  .faq-item { border-bottom: 1px solid var(--brise); padding: 1.25rem 0; }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q { font-size: 0.9rem; font-weight: 600; color: var(--majorelle); margin-bottom: 6px; }
+  .faq-a { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--brise);
+    margin-top: 4rem;
+    opacity: 0.6;
+  }
+
+  /* ── CONFETTIS ── */
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    animation: confetti-fall 1.5s ease-out forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(200px) rotate(720deg) scale(0.3); }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    .prob-grid { grid-template-columns: 1fr; }
+    .bonus-grid { grid-template-columns: 1fr; }
+    .temoignages-grid { grid-template-columns: 1fr; }
+    .temoignage-full { grid-column: auto; }
+    .prix-montant { font-size: 3.2rem; }
+    .hero-title { font-size: 2.6rem; }
+  }
+
+  /* ── VIDÉO ── */
+  .video-section {
+    margin-bottom: 0;
+  }
+
+  .video-wrap {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1.5px solid var(--brise);
+    background: var(--deep);
+    aspect-ratio: 16/9;
+    box-shadow: 0 16px 48px rgba(37,83,161,0.15);
+  }
+
+  .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    border: none;
+  }
+
+  .video-placeholder {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--majorelle) 0%, #1a3a7a 100%);
+    cursor: pointer;
+  }
+
+  .video-play {
+    width: 70px; height: 70px;
+    background: var(--miel);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 24px rgba(254,203,75,0.4);
+  }
+
+  .video-play svg { margin-left: 4px; }
+
+  .video-placeholder:hover .video-play {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(254,203,75,0.6);
+  }
+
+  .video-placeholder-text {
+    font-size: 0.9rem;
+    color: rgba(245,251,253,0.7);
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .video-caption {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.9rem;
+    font-style: italic;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="progress-bar" aria-hidden="true"></div>
+
+<div id="cursor" aria-hidden="true">
+  <svg viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 2 C14 2 22 10 22 18 C22 24 18.6 30 14 32 C9.4 30 6 24 6 18 C6 10 14 2 14 2Z" fill="#fecb4b" opacity="0.9"/>
+    <path d="M14 10 C14 10 18 15 18 19 C18 22 16.2 25 14 26 C11.8 25 10 22 10 19 C10 15 14 10 14 10Z" fill="#ffffff" opacity="0.7"/>
+  </svg>
+</div>
+
+<div id="paillettes" aria-hidden="true"></div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="badge">Accompagnement Instagram · 3 semaines</span>
+    <h1 class="hero-title">La Bougie<br><em>Magique</em></h1>
+    <p class="hero-hook">"La dernière fois que tu as posté, c'était il y a combien de jours ?"</p>
+    <p class="hero-promise">Tu mérites d'être vue. Pas juste présente, vraiment vue.</p>
+    <p class="hero-sub">En 3 semaines, tu repars avec les mots, l'élan et une vraie stratégie pour poster régulièrement, sans te forcer, sans te perdre.</p>
+  </section>
+
+  <!-- PROBLÈMES -->
+  <section class="reveal">
+    <span class="section-label">Ça te parle ?</span>
+    <div class="prob-grid">
+      <div class="prob-item"><strong>Tu fixes l'écran vide.</strong><p>Tu ne sais pas quoi dire, alors tu ne dis rien.</p></div>
+      <div class="prob-item"><strong>Tu doutes à chaque post.</strong><p>Tu écris, tu relis, tu effaces. Encore.</p></div>
+      <div class="prob-item"><strong>Tu te sens invisible.</strong><p>Tu travailles, tu donnes, et personne ne te voit.</p></div>
+      <div class="prob-item"><strong>Tu n'es pas régulière.</strong><p>Tu pars motivée, puis tout s'arrête. La culpabilité revient.</p></div>
+    </div>
+    <div class="pivot">
+      <p>Ce n'est pas un manque de talent. C'est que personne ne t'a aidée à construire <strong>une stratégie qui te ressemble</strong> pour poster avec régularité et envie. C'est exactement ça mon boulot.</p>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- VISION -->
+  <section class="reveal">
+    <span class="section-label">Ma vision d'Instagram</span>
+    <div class="vision">
+      <div class="vision-title">Instagram n'est pas qu'un endroit où "poster".</div>
+      <p>C'est un outil pour <strong>créer du lien, être reconnue</strong> et donner envie de travailler avec toi, sans jouer un personnage, sans te forcer à publier tous les jours, sans copier ce que font les autres.<br><br>Mon approche : on construit quelque chose de <strong>simple, humain et durable</strong>. Quelque chose qui te ressemble tellement que poster devient naturel.</p>
+    </div>
+  </section>
+
+
+  <!-- VIDÉO -->
+  <section class="reveal video-section">
+    <span class="section-label">En vidéo</span>
+    <div class="video-wrap">
+      <!-- REMPLACE "TON_ID_YOUTUBE" par l'ID de ta vidéo YouTube (ex: dQw4w9WgXcQ) -->
+      <!-- <iframe src="https://www.youtube.com/embed/TON_ID_YOUTUBE" allowfullscreen></iframe> -->
+      <div class="video-placeholder">
+        <div class="video-play">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M8 5.14v14l11-7-11-7z" fill="#1a2d50"/>
+          </svg>
+        </div>
+        <p class="video-placeholder-text">Ta vidéo de présentation arrive ici</p>
+      </div>
+    </div>
+    <p class="video-caption">Clique pour me découvrir — et comprendre pourquoi j'ai créé La Bougie Magique</p>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- OBJECTIF + APPELS -->
+  <section class="reveal">
+    <span class="section-label">L'objectif</span>
+    <div class="objectif">
+      <div class="objectif-title">Construire ta stratégie de contenu et te donner l'élan pour te lancer, pour de vrai.</div>
+      <p>Pas juste des conseils à appliquer seule. On construit ensemble un système simple et personnel, pour que tu saches exactement quoi poster, quand, et comment.</p>
+    </div>
+
+    <span class="section-label">Comment on travaille ensemble</span>
+
+    <div class="appel">
+      <span class="appel-num">1</span>
+      <span class="appel-week">Semaine 1</span>
+      <div class="appel-title">Comprendre ce qui bloque</div>
+      <div class="appel-desc">On fait le point sur toi, ton activité et ce que tu veux vraiment transmettre. On pose les fondations de ta stratégie.</div>
+      <div class="tags">
+        <span class="tag">Clarifier ce que tu veux transmettre</span>
+        <span class="tag">Comprendre à qui tu t'adresses</span>
+        <span class="tag">Identifier ce qui te bloque</span>
+      </div>
+    </div>
+
+    <div class="appel">
+      <span class="appel-num">2</span>
+      <span class="appel-week">Semaine 2</span>
+      <div class="appel-title">Construire ta stratégie de contenu</div>
+      <div class="appel-desc">On construit ton plan de communication, concret, réaliste, adapté à toi. Tu repars avec des idées à appliquer dès le lendemain.</div>
+      <div class="tags">
+        <span class="tag">Trouver des angles qui attirent l'attention</span>
+        <span class="tag">Créer des stories plus naturelles</span>
+        <span class="tag">Parler de tes offres sans forcer</span>
+        <span class="tag">Idées même sans inspiration</span>
+      </div>
+    </div>
+
+    <div class="appel">
+      <span class="appel-num">3</span>
+      <span class="appel-week">Semaine 3</span>
+      <div class="appel-title">Te lancer et repartir autonome</div>
+      <div class="appel-desc">On fait le bilan de tes premiers posts, on ajuste, et on s'assure que tu repars avec la boussole pour continuer seule, sans douter à chaque publication.</div>
+      <div class="tags">
+        <span class="tag">Bilan et ajustements</span>
+        <span class="tag">Quoi poster quand tu manques d'inspiration</span>
+        <span class="tag">Repartir autonome et confiante</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- BONUS -->
+  <section class="reveal">
+    <span class="section-label">En plus des appels, tu reçois</span>
+    <div class="bonus-grid">
+      <div class="bonus-item">
+        <span class="bonus-icon">🔍</span>
+        <div class="bonus-title">Audit de ton compte</div>
+        <div class="bonus-desc">Avant le 1er appel, ce qui bloque, ce qui fonctionne.</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-icon">🗺️</span>
+        <div class="bonus-title">Plan d'action PDF</div>
+        <div class="bonus-desc">Ta stratégie résumée, à garder et relire quand tu veux.</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-icon">💡</span>
+        <div class="bonus-title">30 idées personnalisées</div>
+        <div class="bonus-desc">Adaptées à ton activité, pas des templates génériques.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- RÉSULTATS -->
+  <section class="reveal">
+    <span class="section-label">Ce que tu repars avec</span>
+    <div class="result-list">
+      <div class="result-row"><div class="result-check"></div><p>Une stratégie claire adaptée à ton activité</p></div>
+      <div class="result-row"><div class="result-check"></div><p>Un rythme de contenu réaliste et tenable</p></div>
+      <div class="result-row"><div class="result-check"></div><p>Plus d'aisance pour parler de tes offres</p></div>
+      <div class="result-row"><div class="result-check"></div><p>Une méthode pour rester régulière sans t'épuiser</p></div>
+      <div class="result-row"><div class="result-check"></div><p>L'élan pour te lancer, et ne plus repousser</p></div>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- TÉMOIGNAGES -->
+  <section class="reveal">
+    <span class="section-label">Ce qu'en disent mes clientes</span>
+
+    <div class="temoignages-grid">
+
+      <div class="temoignage temoignage-full">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">Je travaille avec Olivia pour l'animation de mon compte Instagram. Ayant du mal à être autonome sur le sujet, travailler avec Olivia m'a permis de devenir beaucoup plus régulière et impliquée dans ma stratégie de contenu. Notre objectif initial était simple : publier de façon constante, et jusqu'à présent, on le tient. Olivia est impliquée, déterminée, à l'écoute. Une vraie partenaire de confiance !</p>
+        <div class="temoignage-author">Seheno Ratefimandimby, COO Freelance</div>
+      </div>
+
+      <div class="temoignage">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">J'ai augmenté la fréquentation de mon compte ainsi que le nombre de vues de mes posts. Je me sens plus à l'aise pour parler de mon activité artisanale sur les réseaux.</p>
+        <div class="temoignage-author">Lucille Ballarini, Artisane</div>
+      </div>
+
+      <div class="temoignage">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">Grâce à son accompagnement, mon contenu est devenu plus cohérent, plus professionnel et surtout plus compréhensible pour mes prospects. Je recommande à 100% !</p>
+        <div class="temoignage-author">Naomie Guitteaud</div>
+      </div>
+
+      <div class="temoignage temoignage-full">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">L'accompagnement était 100% personnalisé. Olivia a la capacité de conseiller tout en restant extrêmement douce et bienveillante, ce qui rend les échanges très agréables et faciles à mettre en pratique. Je recommande vivement à celles et ceux qui souhaitent développer leur communication avec plus de clarté et de sérénité.</p>
+        <div class="temoignage-author">Koudjei Coulibaly</div>
+      </div>
+
+      <div class="temoignage">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">Des conseils concrets et faciles à mettre en oeuvre pour développer mon compte Instagram. Sa gentillesse, sa bonne humeur et sa disponibilité ont été de véritables atouts.</p>
+        <div class="temoignage-author">Sonia Djeddou</div>
+      </div>
+
+      <div class="temoignage">
+        <div class="temoignage-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="temoignage-text">Une personne très à l'écoute, dévouée pour son travail. Ça m'a beaucoup aidé à y voir plus clair. Merci pour ta patience et ton professionnalisme.</p>
+        <div class="temoignage-author">Imene Baadj</div>
+      </div>
+
+    </div>
+
+    <div class="preuve-zone">
+      <p>Ajoute ici tes captures de messages, retours d'appels ou avant/après.<br>Même un simple "merci, j'ai enfin posté" fait la différence.</p>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- PRIX + CTA -->
+  <section class="reveal">
+    <div class="prix-block">
+      <div class="prix-label">La Bougie Magique, 3 semaines d'accompagnement</div>
+      <div class="prix-montant">250 €</div>
+      <div class="prix-detail">3 appels · Audit · Plan PDF · 30 idées de contenus personnalisées</div>
+      <div class="prix-facilite">Paiement en 4 fois disponible</div>
+    </div>
+    <!-- REMPLACE href="#" PAR TON LIEN STRIPE -->
+    <a href="#" class="cta-btn">Je réserve ma place →</a>
+    <div class="garantie">
+      <span>🛡️</span>
+      <p>Les places sont limitées pour garantir un accompagnement de qualité. Une question avant de te lancer ? Envoie-moi un message, je te réponds sous 24h.</p>
+    </div>
+  </section>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- FAQ -->
+  <section class="reveal">
+    <span class="section-label">Questions fréquentes</span>
+    <div class="faq-item">
+      <div class="faq-q">Est-ce que ça marche si je ne suis pas à l'aise avec Instagram ?</div>
+      <div class="faq-a">C'est exactement pour ça que cet accompagnement existe. On repart de zéro ensemble, sans jargon ni pression.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Est-ce que je dois poster tous les jours ?</div>
+      <div class="faq-a">Non. On construit ensemble un rythme réaliste qui te correspond, pas de la pression en plus.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Et si je manque encore de motivation après ?</div>
+      <div class="faq-a">Le but n'est pas de te transformer en machine à contenu. On construit un système réaliste et une communication qui te ressemble, pour que poster demande moins d'énergie mentale, pas plus.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">En combien de temps je vois des résultats ?</div>
+      <div class="faq-a">Dès la fin du 1er appel, ta stratégie commence à prendre forme. Et dès la semaine 2, tu postes, vraiment.</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© Papote & Paillettes, La Bougie Magique</p>
+  </footer>
+
+</div>
+
+<script>
+  // ── PROGRESS BAR ──
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    progressBar.style.width = pct + '%';
+  });
+
+  // ── CURSEUR FLAMME ──
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+
+  // ── CONFETTIS AU CLIC CTA ──
+  const confettiColors = ['#fecb4b', '#2553a1', '#c9dfee', '#ffe2a8', '#f8f3ee', '#ffffff'];
+  function launchConfettis(x, y) {
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.classList.add('confetti-piece');
+      const size  = Math.random() * 10 + 5;
+      const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+      const spread = (Math.random() - 0.5) * 300;
+      el.style.cssText = `
+        left: ${x + spread}px;
+        top: ${y - Math.random() * 60}px;
+        width: ${size}px; height: ${size}px;
+        background: ${color};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration: ${Math.random() * 0.8 + 1}s;
+        animation-delay: ${Math.random() * 0.3}s;
+        box-shadow: 0 0 4px ${color};
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2000);
+    }
+  }
+  document.querySelectorAll('.cta-btn').forEach(btn => {
+    btn.addEventListener('click', e => launchConfettis(e.clientX, e.clientY));
+  });
+
+  // ── PAILLETTES + FLEURS ──
+  const container = document.getElementById('paillettes');
+  const colors = ['#fecb4b', '#2553a1', '#c9dfee', '#ffe2a8', '#f8f3ee', '#ffffff'];
+  const fleurSVGs = [
+    `<svg width="18" height="18" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="8" rx="5" ry="9" fill="#fecb4b" opacity="0.85"/><ellipse cx="20" cy="8" rx="5" ry="9" fill="#fecb4b" opacity="0.85" transform="rotate(60 20 20)"/><ellipse cx="20" cy="8" rx="5" ry="9" fill="#ffe2a8" opacity="0.85" transform="rotate(120 20 20)"/><ellipse cx="20" cy="8" rx="5" ry="9" fill="#fecb4b" opacity="0.85" transform="rotate(180 20 20)"/><ellipse cx="20" cy="8" rx="5" ry="9" fill="#ffe2a8" opacity="0.85" transform="rotate(240 20 20)"/><ellipse cx="20" cy="8" rx="5" ry="9" fill="#fecb4b" opacity="0.85" transform="rotate(300 20 20)"/><circle cx="20" cy="20" r="5" fill="#ffffff"/></svg>`,
+    `<svg width="16" height="16" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="7" rx="4" ry="8" fill="#c9dfee" opacity="0.9"/><ellipse cx="20" cy="7" rx="4" ry="8" fill="#c9dfee" opacity="0.9" transform="rotate(72 20 20)"/><ellipse cx="20" cy="7" rx="4" ry="8" fill="#bdd8ec" opacity="0.9" transform="rotate(144 20 20)"/><ellipse cx="20" cy="7" rx="4" ry="8" fill="#c9dfee" opacity="0.9" transform="rotate(216 20 20)"/><ellipse cx="20" cy="7" rx="4" ry="8" fill="#bdd8ec" opacity="0.9" transform="rotate(288 20 20)"/><circle cx="20" cy="20" r="5" fill="#fecb4b"/></svg>`,
+    `<svg width="14" height="14" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="8" rx="4" ry="8" fill="#ffe2a8" opacity="0.9"/><ellipse cx="20" cy="8" rx="4" ry="8" fill="#fecb4b" opacity="0.9" transform="rotate(90 20 20)"/><ellipse cx="20" cy="8" rx="4" ry="8" fill="#ffe2a8" opacity="0.9" transform="rotate(180 20 20)"/><ellipse cx="20" cy="8" rx="4" ry="8" fill="#fecb4b" opacity="0.9" transform="rotate(270 20 20)"/><circle cx="20" cy="20" r="5" fill="#2553a1" opacity="0.6"/></svg>`
+  ];
+
+  function createSpark() {
+    const el = document.createElement('div');
+    el.classList.add('spark');
+    const size = Math.random() * 8 + 3;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const duration = Math.random() * 6 + 5;
+    const delay = Math.random() * 8;
+    el.style.cssText = `width:${size}px;height:${size}px;background:${color};left:${Math.random()*100}%;bottom:-20px;animation-duration:${duration}s;animation-delay:${delay}s;box-shadow:0 0 ${size}px ${color};`;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), (duration + delay) * 1000);
+  }
+
+  function createFleur() {
+    const el = document.createElement('div');
+    const duration = Math.random() * 7 + 6;
+    const delay = Math.random() * 5;
+    el.style.cssText = `position:absolute;left:${Math.random()*100}%;bottom:-30px;animation:sparkle ${duration}s linear forwards;animation-delay:${delay}s;opacity:0;pointer-events:none;`;
+    el.innerHTML = fleurSVGs[Math.floor(Math.random() * fleurSVGs.length)];
+    container.appendChild(el);
+    setTimeout(() => el.remove(), (duration + delay) * 1000);
+  }
+
+  for (let i = 0; i < 30; i++) createSpark();
+  for (let i = 0; i < 8; i++) createFleur();
+  setInterval(() => { for (let i = 0; i < 3; i++) createSpark(); }, 800);
+  setInterval(() => createFleur(), 1800);
+
+  // Étoiles décoratives
+  [
+    {top:'12%',left:'5%',size:'10px',delay:'0s'},
+    {top:'8%',right:'8%',size:'14px',delay:'0.8s'},
+    {top:'25%',left:'92%',size:'8px',delay:'1.5s'},
+    {top:'42%',left:'3%',size:'12px',delay:'0.3s'},
+    {top:'60%',left:'95%',size:'9px',delay:'2s'},
+    {top:'75%',left:'4%',size:'11px',delay:'1.2s'},
+    {top:'88%',right:'6%',size:'13px',delay:'0.6s'},
+  ].forEach(pos => {
+    const star = document.createElement('div');
+    star.classList.add('deco-star');
+    star.innerHTML = `<svg width="${pos.size}" height="${pos.size}" viewBox="0 0 20 20" fill="none"><path d="M10 0 L11.8 7.6 L20 10 L11.8 12.4 L10 20 L8.2 12.4 L0 10 L8.2 7.6 Z" fill="#fecb4b" opacity="0.7"/></svg>`;
+    Object.assign(star.style, {position:'fixed',top:pos.top||'auto',left:pos.left||'auto',right:pos.right||'auto',animationDelay:pos.delay,zIndex:0,pointerEvents:'none'});
+    document.body.appendChild(star);
+  });
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
